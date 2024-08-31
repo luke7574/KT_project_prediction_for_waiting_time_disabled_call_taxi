@@ -40,53 +40,129 @@
 ![image](https://github.com/user-attachments/assets/52a3736f-3010-472e-9eab-17dbf8932712)
 
 - target과 다른 변수들간의 상관 관계 확인
-![image](https://github.com/user-attachments/assets/a0ce28f3-c0cf-4ca9-bfa7-af58e8204c25)
+![image](https://github.com/user-attachments/assets/7f10655a-01d5-4783-b22d-f927d95b2af6)
 
-- target 과 ride_rate간의 산점도
-![image](https://github.com/user-attachments/assets/985a6c41-9619-4fb2-8ff3-db93022dd4a2)
+- target 과 ride_ratio간의 산점도
+
+  ![image](https://github.com/user-attachments/assets/a5d7a8d9-268a-4dae-8302-59173f11e0a8)
 
 - 운임요금과 요일별 target 산점도
-![image](https://github.com/user-attachments/assets/79f7451e-c98b-4888-a9eb-ebf916de4bcf)
+
+  ![image](https://github.com/user-attachments/assets/f8aa2550-5e54-417b-9a45-45ba2e8b4b7b)
 
 ## 범주형 변수들과 target 간의 관계 
 - 휴일 여부
 
-![image](https://github.com/user-attachments/assets/b9dfa94c-bd2f-4aef-9032-9feef65e5ec2)
-![image](https://github.com/user-attachments/assets/a6541f64-ebc7-4b24-b7dd-657e8f2d4f75)
+  ![image](https://github.com/user-attachments/assets/6711b43b-681b-4971-b38c-fa8fd60ae64f)
+  ### Ttest_indResult(statistic=5.078160958101015, pvalue=4.0505005123594406e-07)
+---
+- 주말 여부
 
-- 요일
-![image](https://github.com/user-attachments/assets/bfac29d0-d309-4791-83e2-a9b7b2c9d214)
-![image](https://github.com/user-attachments/assets/a16833a9-ecf8-46ab-a12e-402c4f484685)
+  ![image](https://github.com/user-attachments/assets/003d00db-c02f-4ced-b0de-bc5f094ed601)
+  ### Ttest_indResult(statistic=7.917032903397524, pvalue=3.42488756704735e-15)
+---
+- 코로나 여부
 
-- 계절
-![image](https://github.com/user-attachments/assets/04cd0b23-c46c-4c99-ace9-5564a7b0ff7d)
-![image](https://github.com/user-attachments/assets/f422d2a8-0479-4942-99d4-6d5a534fb8c8)
+  ![image](https://github.com/user-attachments/assets/cbb89c1d-382b-4324-8785-8d665d1f7098)
+  ### Ttest_indResult(statistic=31.718933261457867, pvalue=5.512162412795066e-190)
+---
+- 요일 여부
 
-## 변수 정리 
-- 강한 관계의 변수 : waiting_time, MA_wt7, ride_rate, holiday
-- 약한 관계의 변수 : car_cnt, fare, distance, weekday, season
-- 관계가 없는 변수 : 나머지 변수들
+  ![image](https://github.com/user-attachments/assets/8ced0774-2a49-4ec0-b046-79cf89ec6535)
+  ### F_onewayResult(statistic=15.668738200566109, pvalue=8.766163819661817e-18)
+---
+- 계절 여부
+
+  ![image](https://github.com/user-attachments/assets/7c3d921f-b0a2-402b-8932-1541a064841e)
+  ### F_onewayResult(statistic=34.73562423868687, pvalue=4.719868115759872e-22)
 ---
 
+## 변수 정리 
+### 강한 관계의 변수
+- 'count_taxi': 운행 된 차량 수 , 'receipt': 접수 건수, 'boarding': 이용 건수, 'avg_rate': 평균요금, 'avg_ride_distance': 평균 거리, 'ride_ratio': 
+- 'covid_19': 코로나 발생 시점 ~ 집합 금지, 집합 금지 ~ 사회적 거리두기, 그 이후로 3분류
+- 'holiday', 'day7_avg_wait_time', 'ride_ratio', 
+- 'weekend_holiday', 'weekday_Saturday', 'weekday_Sunday', 'rainyday'
+### 약한 관계의 변수
+- 'temp_max', 'temp_min' -> 'temp_avg'로 치환
+- 'humidity_max(%)', 'humidity_min(%)' -> 'humidity_avg'로 치환
+- 'month'
+- 'weekend', 'weekday_Monday', 'weekday_Tuesday', 'weekday_Wednesday', 'weekday_Thursday', 'weekday_Friday' -> 평일의 요일 간 차이는 없다고 보고 평일/토요일/일요일로 나눔  
+
+### 관계가 없는 변수 
+- 'season_Spring', 'season_Summer', 'season_Fall', 'season_Winter' -> 날씨 정보와 상관없이 '달'로 구분했기 때문에 관계가 적다고 생각
+- 'sunshine(MJ/m2)'
+
+---
+## 파생변수 추가
+### Rainy dat 변수 생성
+- rain(mm)이 2이상이면 1 아니면 0으로 rainyday 파생변수 생성
+### 코로나 파생 변수 생성
+- 코로나 발생 시점 ~ 집합 금지 기간 (2020-01-20~2020-04-19) -> 2
+- 집합 금지 해제 ~ 사회적 거리두기 (2020-04-20 ~ 2022-04-18) -> 1
+- 코로나 기간이 아닌 기간 -> 0
+
+  ![image](https://github.com/user-attachments/assets/38132ecf-3cfb-4068-b24e-3c62c01096c0)
+  ![image](https://github.com/user-attachments/assets/6f2cbbec-a9fc-44a5-ad7f-541869b43d5f)
+
+---
 ## 모델링
-1) 선형회귀 모델
-![image](https://github.com/user-attachments/assets/1a111cf2-1b02-46fe-8e15-f9053f343552)
-![image](https://github.com/user-attachments/assets/0dcd43de-e191-487a-b37e-78d04c2d58e9)
+- 스케일링 작업시 ['boarding', 'receipt'] 에는 MinMaxScaler진행 / ['avg_ride_distance', 'avg_rate', 'count_taxi'] 에는 Robust_Scailing(이상치가 있는 feature에서 좋은 결과를 보여줌)진행
+1) Linear Regression
+![image](https://github.com/user-attachments/assets/11bf271b-0963-412a-84e5-2202f2e81653)
+![image](https://github.com/user-attachments/assets/5d4825d4-0692-4ce5-be52-29abe7e1f7c5)
 
-2) KNN
-![image](https://github.com/user-attachments/assets/4988c501-3ce6-4d97-9365-1fb95338dcd9)
-![image](https://github.com/user-attachments/assets/e60bb7b3-9417-442f-affa-6700eb5aa176)
 
-3) RandomForestRegressor
-![image](https://github.com/user-attachments/assets/b182ddd8-5e64-48bb-b424-d504f3dd781b)
-![image](https://github.com/user-attachments/assets/4d84461f-e718-4714-9633-e6a09d7c4440)
+2) Lasso Regression
+![image](https://github.com/user-attachments/assets/09ff1240-54a8-4925-84a0-b06245124c0e)
+![image](https://github.com/user-attachments/assets/52379464-156f-46e1-b494-36749431c45a)
 
-4) XGB
-![image](https://github.com/user-attachments/assets/c3d5b95b-90bb-4b27-9866-8636ffbab00d)
-![image](https://github.com/user-attachments/assets/8eaf8d0a-4fc8-489e-90ec-7cfa1096edfc)
 
-### 모델별 비교
-![image](https://github.com/user-attachments/assets/25a53a01-e73b-4330-ac3b-c0616484bb33)
+3) Ridge Regression
+![image](https://github.com/user-attachments/assets/7cd18837-5a1b-4dac-84a2-052eee53c100)
+![image](https://github.com/user-attachments/assets/2fa3186f-50d8-43a9-a65b-d464c721fa34)
 
-- ***XGB, RF, LinearRegression*** 모델 성능 우수 확인
+
+4) ElasticNet
+![image](https://github.com/user-attachments/assets/3874277f-ec49-4313-a0fe-ffe6eaa9c21b)
+![image](https://github.com/user-attachments/assets/7601b9ce-5f73-4c86-8651-a5376aa279f2)
+
+
+5) KNN
+![image](https://github.com/user-attachments/assets/9072f62f-d8cf-4afc-a9b2-cd5243cf3926)
+![image](https://github.com/user-attachments/assets/9263b0c9-d66a-4453-bf30-f6ebcaa84505)
+
+
+6) Decision Tree
+![image](https://github.com/user-attachments/assets/bb526bea-ee42-4ac5-88d4-4d1d6202cf07)
+![image](https://github.com/user-attachments/assets/2f755f6a-469c-4c08-8a9e-40afbab060db)
+
+
+7) Random Forest
+![image](https://github.com/user-attachments/assets/2f1420ed-ebda-4407-8a34-876671105041)
+![image](https://github.com/user-attachments/assets/26316b26-40da-49eb-bc1c-1539d32f6fab)
+
+
+8) LightGBM
+![image](https://github.com/user-attachments/assets/30c1b8e5-2137-4b4b-8244-6f6462937bc4)
+![image](https://github.com/user-attachments/assets/decde94b-6d7b-4001-a6ad-f793e5d5b0eb)
+
+
+9) XGBoost
+![image](https://github.com/user-attachments/assets/60f5c6a8-b5ee-4cb5-9559-270627d4b7e8)
+![image](https://github.com/user-attachments/assets/f81d250c-7509-4294-bc52-264f2b9b3b11)
+
+
+10) Gradient Boosting
+![image](https://github.com/user-attachments/assets/7ca32345-5873-433d-9364-383c4245af5b)
+![image](https://github.com/user-attachments/assets/786c2d1f-83bd-4238-9a46-6aa07d26a3c3)
+
+
+
+### 최종 모델
+- **총 10개의 모델을 돌려본 결과 Ridge 모델의 성능이 가장 좋았다.**
+
+  ![image](https://github.com/user-attachments/assets/48813c6b-9312-4c22-82f5-bcefe4297588)
+
+
 

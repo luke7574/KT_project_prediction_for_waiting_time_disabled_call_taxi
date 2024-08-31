@@ -1,1 +1,0 @@
-# KT_project_prediction_for_waiting_time_disabled_call_taxi
